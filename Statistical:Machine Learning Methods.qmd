@@ -17,4 +17,6 @@ editor: visual
 
 -   Question 5: Why do we split our data into a training and test set?
 
+    -   We split our data into a training and test set because if we want our model to do well for prediction this means we want it to predict well for observations it has yet to see. By fitting our model to the training set, we can then use the test set to make predictions and judge the effectiveness of our model with our specified metric.
+
 ## Task 2: Data Prep

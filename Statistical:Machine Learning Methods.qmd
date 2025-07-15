@@ -71,3 +71,34 @@ new_heart<-heart|>
 ## Task 3: EDA
 
 ### Question 1
+
+```{r}
+#Create scatterplot for MaxHR vs Age with color being the HeartDiseaseIndicator
+plot(x=new_heart$MaxHR,y=new_heart$Age,xlab="Max Heart Rate",ylab="Age")
+
+#Add colored points based on the heart disease indicator variable
+points(x=new_heart[new_heart$HeartDiseaseIndicator==0,]$MaxHR,
+       y=new_heart[new_heart$HeartDiseaseIndicator==0,]$Age,col="#1A85FF")
+points(x=new_heart[new_heart$HeartDiseaseIndicator==1,]$MaxHR,
+       y=new_heart[new_heart$HeartDiseaseIndicator==1,]$Age,col="#D41159")
+
+#Add linear regression lines for MaxHR vs Age for each level of the
+#HeartDiseaseIndicator variable
+abline(lm(Age~MaxHR,data=new_heart[new_heart$HeartDiseaseIndicator==0,]),
+          col="#1A85FF")
+abline(lm(Age~MaxHR,data=new_heart[new_heart$HeartDiseaseIndicator==1,]),
+          col="#D41159")
+
+#Add a legend
+legend("topright",legend=c("No Heart Disease", "Heart Disease"),
+       fill=c("#1A85FF","#D41159"),cex=.75)
+
+#Add a title
+title("Exploring the Heart Disease Data")
+```
+
+### Question 2
+
+Based on the scatter plot we would say that an interaction model would be appropriate. We determine this by looking at the slopes of the lines for heart disease and no heart disease. Since the lines for heart disease and no heart disease are not parallel it suggests that the effects of max heart rate on age is dependent on heart disease status. This suggests that an interaction model is more appropriate than an additive model.
+
+## Task 4: Testing and Training

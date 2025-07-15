@@ -102,3 +102,42 @@ title("Exploring the Heart Disease Data")
 Based on the scatter plot we would say that an interaction model would be appropriate. We determine this by looking at the slopes of the lines for heart disease and no heart disease. Since the lines for heart disease and no heart disease are not parallel it suggests that the effects of max heart rate on age is dependent on heart disease status. This suggests that an interaction model is more appropriate than an additive model.
 
 ## Task 4: Testing and Training
+
+```{r}
+#Set seed for reproducibility
+set.seed(101)
+
+#Split dataset into training and test sets
+heart_split<-initial_split(new_heart,prop=0.8)
+train<-training(heart_split)
+test<-testing(heart_split)
+```
+
+## Task 5: OLS and LASSO
+
+### Question 1
+
+```{r}
+#Fit an OLS model
+ols_mlr<-lm(Age~MaxHR*HeartDiseaseIndicator,data=new_heart)
+summary(ols_mlr)
+```
+
+### Question 2
+
+```{r}
+#Calculate test RMSE
+sqrt(mean((test$Age-predict(ols_mlr,newdata = test))^2))
+```
+
+### Question 3
+
+```{r}
+#Create folds
+heart_CV_folds<-vfold_cv(train,10)
+
+#Create a LASSO recipe
+LASSO_recipe<-recipe(Age~MaxHR+HeartDiseaseIndicator,data=train)|>
+  step_normalize(MaxHR)|>
+  step_interact(~MaxHR:starts_with("HeartDiseaseIndicator"))
+```

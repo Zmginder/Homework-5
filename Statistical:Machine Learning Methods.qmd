@@ -9,14 +9,33 @@ editor: visual
 
 -   Question 1: What is the purpose of using cross-validation when fitting a random forest model?
 
+    -   The purpose of using cross-validation when fitting a random forest model is that it allows us to get a better sense of how well each random forest model performs on unseen data. We want to first tune the tree to determine the number of parameters that will be randomly utilized for each split of the tree model. By staying within the training data set to do this and using cross validation, it allows us to leave the test set untouched and leave that for comparison to other model types and/or a final model test. The more often we utilize the test set we run the risk of over fitting to our data, which cross validation helps prevent.
+
 -   Question 2: Describe the bagged tree algorithm.
+
+    -   A bagged tree algorithm is a type of ensemble tree method. First you split the data set into a training and test set. In order to tune the model paramteres we will use k-fold cross validation within the training data set. For each tuning parameter value we perform B bootstrap resamples within each of the k-folds, fitting a tree to each resample, and aggregating the predictions within each fold. For each tuning parameter value we determing the average prediction accuracy or some other model metric to determine the optimal tuning parameters. The best tuning parameters are then utilized to fit a bagged tree utilizing just the training data set. We then can compare our tunned bagged tree model to other models based on prediction on the test data set and utilizing some sort of metric.
 
 -   Question 3: What is meant by a general linear model?
 
+    -   A general linear model allows for more flexibility than standard linear regression by allowing the errors of the response variable to be non-normal. One example of its utilization is when fitting logistic regression models with the logit link function, which allows us to model a response variable that is binary.
+
 -   Question 4: When fitting a multiple linear regression model, what does adding an interaction term do? That is, what does it allow the model to do differently as compared to when it is not included in the model?
+
+    -   By adding an interaction term it allows for the effect of one variable to depend on the value of another. An interaction term normally effects the slope term of another variable whereas the slope of one term depends on the value of the other term.
 
 -   Question 5: Why do we split our data into a training and test set?
 
     -   We split our data into a training and test set because if we want our model to do well for prediction this means we want it to predict well for observations it has yet to see. By fitting our model to the training set, we can then use the test set to make predictions and judge the effectiveness of our model with our specified metric.
 
 ## Task 2: Data Prep
+
+### Packages and Data
+
+```{r}
+#| warning: false
+#Library these packages
+library(tidyverse)
+library(tidymodels)
+library(caret)
+library(yardstick)
+```

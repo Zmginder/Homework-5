@@ -139,5 +139,37 @@ heart_CV_folds<-vfold_cv(train,10)
 #Create a LASSO recipe
 LASSO_recipe<-recipe(Age~MaxHR+HeartDiseaseIndicator,data=train)|>
   step_normalize(MaxHR)|>
+  step_dummy(HeartDiseaseIndicator)|>
   step_interact(~MaxHR:starts_with("HeartDiseaseIndicator"))
+LASSO_recipe
 ```
+
+### Question 4
+
+```{r}
+#Set spec
+LASSO_spec <- linear_reg(penalty = tune(), mixture = 1) |>
+  set_engine("glmnet")
+#Create workflow
+LASSO_wkf <- workflow() |>
+  add_recipe(LASSO_recipe) |>
+  add_model(LASSO_spec)
+
+#Create tuning grid for LASSO
+LASSO_grid <- LASSO_wkf |>
+  tune_grid(resamples = heart_CV_folds,
+            grid = grid_regular(penalty(), levels = 200)) 
+
+#Final tuning parameter with lowest rmse
+lowest_rmse <- LASSO_grid |>
+  select_best(metric = "rmse")
+
+#fit it to the entire training set to see the model fit
+LASSO_final <- LASSO_wkf |>
+  finalize_workflow(lowest_rmse) |>
+  fit(train)
+tidy(LASSO_final)
+
+```
+
+### Question 5

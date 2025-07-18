@@ -192,3 +192,37 @@ LASSO_RMSE<-LASSO_final |>
 cat("The RMSE of the OLS Model is",OLS_RMSE,"\n")
 cat("The RMSE of the LASSO Model is",LASSO_RMSE,"\n")
 ```
+
+### Question 7
+
+The RMSE calculations for the models are different because in LASSO the penalty term shrinks some of the less important predictors' coefficients towards zero. As we saw the penalty term is small so while the coefficients might be slightly shrunk, the LASSO model is actually close to the OLS model due to the small penalty term and therefore the RMSEs are very similar.
+
+## Task 6: Logistic Regression
+
+### Question 1
+
+```{r}
+#LR Model 1
+LR1_rec<-recipe(HeartDiseaseIndicator~Age+MaxHR,data=train)|>
+  step_normalize(all_numeric(), -HeartDiseaseIndicator)
+LR_spec<-logistic_reg()|>
+  set_engine("glm")
+LR1_wkf<-workflow()|>
+  add_recipe(LR1_rec)|>
+  add_model(LR_spec)
+LR1_fit<-LR1_wkf|>
+  fit_resamples(heart_CV_folds,metrics=metric_set(accuracy,mn_log_loss))
+
+
+#LR Model 2
+LR2_rec<-recipe(HeartDiseaseIndicator~Age+MaxHR+Cholesterol+Sex,data=train)|>
+  step_normalize(all_numeric(), -HeartDiseaseIndicator)
+LR2_wkf<-workflow()|>
+  add_recipe(LR2_rec)|>
+  add_model(LR_spec)
+LR2_fit<-LR2_wkf|>
+  fit_resamples(heart_CV_folds,metrics=metric_set(accuracy,mn_log_loss))
+rbind(LR1_fit|>collect_metrics(),
+      LR2_fit|>collect_metrics())
+
+```

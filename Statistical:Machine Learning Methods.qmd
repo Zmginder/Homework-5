@@ -173,3 +173,22 @@ tidy(LASSO_final)
 ```
 
 ### Question 5
+
+I would expect the RMSE values to be fairly close as the penalty for the "best" LASSO model is close to zero. A LASSO penalty of zero is essentially an ordinary linear regression model therefore the RMSE of this LASSO model should be similar to the RMSE of the ordinary least squares "best" model.
+
+### Question 6
+
+```{r}
+
+#Calculate test RMSE
+OLS_RMSE<-sqrt(mean((test$Age-predict(ols_mlr,newdata = test))^2))
+
+#Calculate test RMSE
+LASSO_RMSE<-LASSO_final |>
+  predict(test) |>
+  pull() |>
+  rmse_vec(truth = test$Age)
+
+cat("The RMSE of the OLS Model is",OLS_RMSE,"\n")
+cat("The RMSE of the LASSO Model is",LASSO_RMSE,"\n")
+```

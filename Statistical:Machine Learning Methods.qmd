@@ -224,5 +224,30 @@ LR2_fit<-LR2_wkf|>
   fit_resamples(heart_CV_folds,metrics=metric_set(accuracy,mn_log_loss))
 rbind(LR1_fit|>collect_metrics(),
       LR2_fit|>collect_metrics())
-
 ```
+
+The best performing model is the second model corresponding to the model with predictors Age, MaxHR, Cholesterol, and Sex when compared to the first model with only predictors of Age and MaxHR. By looking at the metrics when the model was fit on the training set using repeated CV, the accuracy was higher for model 2, and the log loss was lower for model 2. These are both associated with better models (higher accuracy and lower log loss).
+
+### Question 2
+
+```{r}
+LR2_fit<- LR2_wkf |>
+ fit(train)
+conf_mat(test |> mutate(estimate = LR2_fit |> predict(test) |> pull()), 
+ HeartDiseaseIndicator,
+ estimate)
+```
+
+### Question 3
+
+The sensitivity refers to when this model correctly identified cases that have heart disease.
+
+$$
+SensitivityRate=\frac{72}{184}=0.3913
+$$
+
+The specificity refers to when this model correctly identified cases that do not have heart disease.
+
+$$
+SpecificityRate=\frac{66}{184}=0.3587
+$$
